@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+import Category from "./pages/Category";
+import HomePage from "./pages/HomePage";
+import ReviewDetails from "./pages/ReviewDetails";
+import SiteHeader from "./components/SiteHeader";
+
+const client = new ApolloClient({
+  uri: "http://localhost:1337/graphql",
+  cache: new InMemoryCache(),
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <ApolloProvider client={client}>
+        <div className="App">
+          <SiteHeader />
+          <Switch>
+            <Route path="/" exact component={HomePage} />
+            <Route path="/details/:reviewId" component={ReviewDetails} />
+            <Route path="/category/:categoryId" component={Category} />
+          </Switch>
+        </div>
+      </ApolloProvider>
+    </Router>
   );
 }
 
